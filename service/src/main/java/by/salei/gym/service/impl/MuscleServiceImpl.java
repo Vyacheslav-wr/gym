@@ -5,6 +5,7 @@ import by.salei.gym.dao.entity.Muscle;
 import by.salei.gym.service.dto.MuscleCreateDto;
 import by.salei.gym.service.api.MuscleService;
 import by.salei.gym.service.dto.MuscleGetOrUpdateDto;
+import by.salei.gym.service.mapper.MuscleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +16,14 @@ import java.util.stream.Collectors;
 public class MuscleServiceImpl implements MuscleService {
 
     @Autowired
-    MuscleDao muscleDao;
+    private MuscleDao muscleDao;
+
+    @Autowired
+    private MuscleMapper muscleMapper;
 
     @Override
     public MuscleCreateDto save(MuscleCreateDto createMuscleGetDto) {
-        Muscle muscle = Muscle.builder()
-                .muscle(createMuscleGetDto.getMuscle())
-                .power(createMuscleGetDto.getPower())
-                .build();
+        Muscle muscle = muscleMapper.muscleCreateToMuscle(createMuscleGetDto);
         muscleDao.save(muscle);
         return createMuscleGetDto;
     }
@@ -35,32 +36,22 @@ public class MuscleServiceImpl implements MuscleService {
 
     @Override
     public MuscleGetOrUpdateDto update(MuscleGetOrUpdateDto updateMuscleGetDto) {
-        muscleDao.update(Muscle.builder()
-                .muscle(updateMuscleGetDto.getMuscle())
-                .power(updateMuscleGetDto.getPower())
-                .build());
+        muscleDao.update(muscleMapper.muscleGetOrUpdateToMuscle(updateMuscleGetDto));
         return updateMuscleGetDto;
     }
 
     @Override
     public MuscleGetOrUpdateDto getById(Long id) {
         Muscle muscle = muscleDao.getById(id);
-        return MuscleGetOrUpdateDto.builder()
-                .muscle(muscle.getMuscle())
-                .power(muscle.getPower())
-                .build();
+        return muscleMapper.muscleToGetOrUpdateMuscle(muscle);
     }
 
     @Override
     public List<MuscleGetOrUpdateDto> getAll() {
         List<Muscle> muscles = muscleDao.getAll();
-        List<MuscleGetOrUpdateDto> musclesDto = muscles
+        return muscles
                 .stream()
-                .map(muscle -> MuscleGetOrUpdateDto.builder()
-                        .muscle(muscle.getMuscle())
-                        .power(muscle.getPower())
-                        .build())
+                .map(muscle -> muscleMapper.muscleToGetOrUpdateMuscle(muscle))
                 .collect(Collectors.toList());
-        return musclesDto;
     }
 }

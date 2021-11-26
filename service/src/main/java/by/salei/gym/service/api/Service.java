@@ -10,5 +10,5 @@ public interface Service <C extends AbstractCreateDto, G extends AbstractGetOrUp
     G delete(Long id);
     G update(G updateDto);
     G getById(Long id);
-    public List<G> getAll();
+    List<G> getAll();
 }

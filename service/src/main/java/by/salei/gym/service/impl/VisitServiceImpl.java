@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class VisitServiceImpl implements VisitService {
 
     @Autowired
-    VisitDao visitDao;
+    private VisitDao visitDao;
 
     @Override
     public VisitCreateDto save(VisitCreateDto createVisitDto) {
@@ -28,8 +28,9 @@ public class VisitServiceImpl implements VisitService {
 
     @Override
     public VisitGetOrUpdateDto delete(Long id) {
+        VisitGetOrUpdateDto visitGetOrUpdateDto = getById(id);
         visitDao.delete(id);
-        return getById(id);
+        return visitGetOrUpdateDto;
     }
 
     @Override

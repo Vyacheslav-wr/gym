@@ -1,7 +1,6 @@
 package by.salei.gym.service.dto;
 
 import by.salei.gym.dao.entity.Muscle;
-import by.salei.gym.dao.entity.Visit;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

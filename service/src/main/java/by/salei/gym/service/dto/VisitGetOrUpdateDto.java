@@ -1,10 +1,12 @@
 package by.salei.gym.service.dto;
 
+import by.salei.gym.dao.entity.Coach;
+import by.salei.gym.dao.entity.Visit;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -12,6 +14,8 @@ import java.util.Date;
 public class VisitGetOrUpdateDto extends AbstractGetOrUpdateDto {
 
     private Long id;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private Visit visitorId;
+    private Coach coachId;
 }

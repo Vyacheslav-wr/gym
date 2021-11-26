@@ -21,14 +21,14 @@ public abstract class AbstractController<G extends AbstractGetOrUpdateDto,
     }
 
     @Override
-    public ResponseEntity<C> save(C createGetDto) {
-        if (createGetDto == null) {
+    public ResponseEntity<C> save(C createDto) {
+        if (createDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        abstractService.save(createGetDto);
+        abstractService.save(createDto);
 
-        return new ResponseEntity<>(createGetDto, HttpStatus.OK);
+        return new ResponseEntity<>(createDto, HttpStatus.OK);
     }
 
     @Override

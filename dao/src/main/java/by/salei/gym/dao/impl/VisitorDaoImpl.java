@@ -6,8 +6,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class VisitorDaoImpl extends AbstractDao<Visitor> implements VisitorDao {
+
     @Override
     protected Class<Visitor> getEntityClass() {
-        return null;
+        return Visitor.class;
     }
+
 }

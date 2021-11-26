@@ -2,9 +2,11 @@ package by.salei.gym.service.impl;
 
 import by.salei.gym.dao.api.CoachDao;
 import by.salei.gym.dao.entity.Coach;
+import by.salei.gym.dao.entity.Visit;
 import by.salei.gym.service.api.CoachService;
 import by.salei.gym.service.dto.CoachCreateDto;
 import by.salei.gym.service.dto.CoachGetOrUpdateDto;
+import by.salei.gym.service.mapper.CoachMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +17,14 @@ import java.util.stream.Collectors;
 public class CoachServiceImpl extends AbstractService<CoachGetOrUpdateDto, CoachCreateDto> implements CoachService {
 
     @Autowired
-    CoachDao coachDao;
+    private CoachDao coachDao;
+
+    @Autowired
+    private CoachMapper coachMapper;
 
     @Override
     public CoachCreateDto save(CoachCreateDto entity) {
-        Coach coach = new Coach();
-        coach.setName(entity.getName());
-        coach.setEfficiency(entity.getEfficiency());
+        Coach coach = coachMapper.createCoachDtoToCoach(entity);
         coachDao.save(coach);
         return entity;
     }
@@ -34,10 +37,7 @@ public class CoachServiceImpl extends AbstractService<CoachGetOrUpdateDto, Coach
 
     @Override
     public CoachGetOrUpdateDto update(CoachGetOrUpdateDto newEntity) {
-        Coach coach = new Coach();
-        coach.setId(newEntity.getId());
-        coach.setName(newEntity.getName());
-        coach.setEfficiency(newEntity.getEfficiency());
+        Coach coach = coachMapper.getOrUpdateCoachDto(newEntity);
         coachDao.update(coach);
         return newEntity;
     }
@@ -46,12 +46,8 @@ public class CoachServiceImpl extends AbstractService<CoachGetOrUpdateDto, Coach
     public CoachGetOrUpdateDto getById(Long id) {
         Coach coach = coachDao.getById(id);
         try{
-        CoachGetOrUpdateDto coachGetDto = CoachGetOrUpdateDto.builder()
-                .id(coach.getId())
-                .name(coach.getName())
-                .efficiency(coach.getEfficiency())
-                .build();
-            return coachGetDto;
+            CoachGetOrUpdateDto coachGetOrUpdateDto = coachMapper.coachToGetOrUpdateCoachDto(coach);
+            return coachGetOrUpdateDto;
         }
         catch (NullPointerException ex){
             return null;
@@ -63,11 +59,8 @@ public class CoachServiceImpl extends AbstractService<CoachGetOrUpdateDto, Coach
         List<Coach> coaches = coachDao.getAll();
         return coaches
                 .stream()
-                .map(coach -> CoachGetOrUpdateDto.builder()
-                        .id(coach.getId())
-                        .name(coach.getName())
-                        .efficiency(coach.getEfficiency())
-                        .build())
+                .map(coach -> coachMapper.coachToGetOrUpdateCoachDto(coach))
                 .collect(Collectors.toList());
     }
+
 }
