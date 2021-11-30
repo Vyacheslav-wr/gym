@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
-public class MuscleGetOrUpdateDto extends AbstractGetOrUpdateDto {
+public class MuscleGetDto extends AbstractGetDto{
 
     private Long id;
     private MuscleType muscle;

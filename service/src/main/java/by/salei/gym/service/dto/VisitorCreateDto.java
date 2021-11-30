@@ -1,17 +1,12 @@
 package by.salei.gym.service.dto;
 
-import by.salei.gym.dao.entity.Muscle;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-import java.util.List;
+import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class VisitorCreateDto extends AbstractCreateDto {
-
     private String name;
-    private List<Muscle> muscles;
 }

@@ -3,17 +3,22 @@ package by.salei.gym.controller.impl;
 import by.salei.gym.controller.api.Controller;
 import by.salei.gym.service.api.Service;
 import by.salei.gym.service.dto.AbstractCreateDto;
-import by.salei.gym.service.dto.AbstractGetOrUpdateDto;
+import by.salei.gym.service.dto.AbstractGetDto;
+import by.salei.gym.service.dto.AbstractUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public abstract class AbstractController<G extends AbstractGetOrUpdateDto,
-        C extends AbstractCreateDto, S extends Service<C, G>> implements Controller<G, C> {
+public abstract class AbstractController<U extends AbstractUpdateDto,
+        C extends AbstractCreateDto, G extends AbstractGetDto, S extends Service<C, U, G>> implements Controller<U, C, G> {
 
     private final S abstractService;
+
+    protected S getAbstractService(){
+        return abstractService;
+    }
 
     @Autowired
     public AbstractController(S abstractService) {
@@ -43,13 +48,13 @@ public abstract class AbstractController<G extends AbstractGetOrUpdateDto,
     }
 
     @Override
-    public ResponseEntity<G> update(G getOrUpdateDto) {
+    public ResponseEntity<G> update(U getOrUpdateDto) {
         if (getOrUpdateDto == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         abstractService.update(getOrUpdateDto);
-        return new ResponseEntity<>(getOrUpdateDto, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
@@ -58,24 +63,24 @@ public abstract class AbstractController<G extends AbstractGetOrUpdateDto,
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        G getOrUpdateDto = abstractService.getById(id);
+        G getDto = abstractService.getById(id);
 
-        if (getOrUpdateDto == null) {
+        if (getDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(getOrUpdateDto, HttpStatus.OK);
+        return new ResponseEntity<>(getDto, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<List<G>> getAll() {
 
-        List<G> getOrUpdateDtoList = abstractService.getAll();
+        List<G> getDtoList = abstractService.getAll();
 
-        if (getOrUpdateDtoList == null) {
+        if (getDtoList == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(getOrUpdateDtoList, HttpStatus.OK);
+        return new ResponseEntity<>(getDtoList, HttpStatus.OK);
     }
 }

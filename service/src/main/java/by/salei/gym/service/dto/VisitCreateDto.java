@@ -1,13 +1,13 @@
 package by.salei.gym.service.dto;
 
-import by.salei.gym.dao.entity.Coach;
-import by.salei.gym.dao.entity.Visitor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -16,16 +16,24 @@ public class VisitCreateDto extends AbstractCreateDto {
 
     private String startDate;
     private String endDate;
-    private Visitor visitor;
-    private Coach coach;
 
-    public LocalDate getStartDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - hh/mm");
-        return LocalDate.parse(this.startDate, formatter);
+    public Date getStartDate() {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - hh/mm");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("MSC"));
+            return dateFormat.parse(startDate);
+        } catch (ParseException e){
+            return null;
+        }
     }
 
-    public LocalDate getEndDate() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy - hh/mm");
-        return LocalDate.parse(this.endDate, formatter);
+    public Date getEndDate() {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy - hh/mm");
+            dateFormat.setTimeZone(TimeZone.getTimeZone("MSC"));
+            return dateFormat.parse(endDate);
+        } catch (ParseException e){
+            return null;
+        }
     }
 }

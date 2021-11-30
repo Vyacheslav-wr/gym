@@ -1,11 +1,15 @@
 package by.salei.gym.service.api;
 
-import by.salei.gym.service.dto.VisitCreateDto;
-import by.salei.gym.service.dto.VisitGetOrUpdateDto;
-import by.salei.gym.service.dto.VisitorCreateDto;
-import by.salei.gym.service.dto.VisitorGetOrUpdateDto;
+import by.salei.gym.service.dto.*;
 
-public interface VisitorService extends Service<VisitorCreateDto, VisitorGetOrUpdateDto> {
+import java.util.List;
 
-    VisitCreateDto visit(Long id, VisitCreateDto visitCreateDtoDtoDto);
+public interface VisitorService extends Service<VisitorCreateDto, VisitorUpdateDto, VisitorGetDto> {
+
+    VisitorGetDto visit(Long id, VisitCreateDto visitCreateDto);
+
+    VisitorGetDto workout(Long id, Long visitId);
+
+    List<VisitorGetDto> findAllByName(String name);
+
 }

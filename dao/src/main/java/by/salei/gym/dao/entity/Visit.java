@@ -19,8 +19,8 @@ import java.util.Date;
 @Table(name = "visit")
 public class Visit extends AbstractEntity {
 
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private Date startDate;
+    private Date endDate;
 
     @ManyToOne
     @JoinColumn(name = "visitor_id")

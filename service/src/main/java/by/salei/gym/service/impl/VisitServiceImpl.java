@@ -4,9 +4,12 @@ import by.salei.gym.dao.api.VisitDao;
 import by.salei.gym.dao.entity.Visit;
 import by.salei.gym.service.api.VisitService;
 import by.salei.gym.service.dto.VisitCreateDto;
-import by.salei.gym.service.dto.VisitGetOrUpdateDto;
+import by.salei.gym.service.dto.VisitGetDto;
+import by.salei.gym.service.dto.VisitUpdateDto;
+import by.salei.gym.service.mapper.VisitMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,50 +20,39 @@ public class VisitServiceImpl implements VisitService {
     @Autowired
     private VisitDao visitDao;
 
+    @Autowired
+    private VisitMapper visitMapper;
+
+    @Transactional
     @Override
-    public VisitCreateDto save(VisitCreateDto createVisitDto) {
-        visitDao.save(Visit.builder()
-                .startDate(createVisitDto.getStartDate())
-                .endDate(createVisitDto.getEndDate())
-                .build());
-        return createVisitDto;
+    public void save(VisitCreateDto createVisitDto) {
+        visitDao.save(visitMapper.visitCreateDtoToVisit(createVisitDto));
     }
 
+    @Transactional
     @Override
-    public VisitGetOrUpdateDto delete(Long id) {
-        VisitGetOrUpdateDto visitGetOrUpdateDto = getById(id);
+    public void delete(Long id) {
         visitDao.delete(id);
-        return visitGetOrUpdateDto;
+    }
+
+    @Transactional
+    @Override
+    public void update(VisitUpdateDto updateVisitGetDto) {
+        visitDao.update(visitMapper.visitUpdateDtoToVisit(updateVisitGetDto));
     }
 
     @Override
-    public VisitGetOrUpdateDto update(VisitGetOrUpdateDto updateVisitGetDto) {
-        visitDao.update(Visit.builder()
-                .startDate(updateVisitGetDto.getStartDate())
-                .endDate(updateVisitGetDto.getEndDate())
-                .build());
-        return updateVisitGetDto;
-    }
-
-    @Override
-    public VisitGetOrUpdateDto getById(Long id) {
+    public VisitGetDto getById(Long id) {
         Visit visit = visitDao.getById(id);
-        return  VisitGetOrUpdateDto.builder()
-                .startDate(visit.getStartDate())
-                .endDate(visit.getEndDate())
-                .build();
+        return  visitMapper.visitToVisitGetDto(visit);
     }
 
     @Override
-    public List<VisitGetOrUpdateDto> getAll() {
+    public List<VisitGetDto> getAll() {
         List<Visit> visits = visitDao.getAll();
-        List<VisitGetOrUpdateDto> visitsDto = visits
+        return visits
                 .stream()
-                .map(visit -> VisitGetOrUpdateDto.builder()
-                        .startDate(visit.getStartDate())
-                        .endDate(visit.getEndDate())
-                        .build())
+                .map(visit ->visitMapper.visitToVisitGetDto(visit))
                 .collect(Collectors.toList());
-        return visitsDto;
     }
 }

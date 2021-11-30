@@ -4,10 +4,12 @@ import by.salei.gym.dao.api.MuscleDao;
 import by.salei.gym.dao.entity.Muscle;
 import by.salei.gym.service.dto.MuscleCreateDto;
 import by.salei.gym.service.api.MuscleService;
-import by.salei.gym.service.dto.MuscleGetOrUpdateDto;
+import by.salei.gym.service.dto.MuscleGetDto;
+import by.salei.gym.service.dto.MuscleUpdateDto;
 import by.salei.gym.service.mapper.MuscleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,37 +23,37 @@ public class MuscleServiceImpl implements MuscleService {
     @Autowired
     private MuscleMapper muscleMapper;
 
+    @Transactional
     @Override
-    public MuscleCreateDto save(MuscleCreateDto createMuscleGetDto) {
+    public void save(MuscleCreateDto createMuscleGetDto) {
         Muscle muscle = muscleMapper.muscleCreateToMuscle(createMuscleGetDto);
         muscleDao.save(muscle);
-        return createMuscleGetDto;
     }
 
+    @Transactional
     @Override
-    public MuscleGetOrUpdateDto delete(Long id) {
+    public void delete(Long id) {
         muscleDao.delete(id);
-        return getById(id);
+    }
+
+    @Transactional
+    @Override
+    public void update(MuscleUpdateDto updateMuscleGetDto) {
+        muscleDao.update(muscleMapper.muscleUpdateToMuscle(updateMuscleGetDto));
     }
 
     @Override
-    public MuscleGetOrUpdateDto update(MuscleGetOrUpdateDto updateMuscleGetDto) {
-        muscleDao.update(muscleMapper.muscleGetOrUpdateToMuscle(updateMuscleGetDto));
-        return updateMuscleGetDto;
-    }
-
-    @Override
-    public MuscleGetOrUpdateDto getById(Long id) {
+    public MuscleGetDto getById(Long id) {
         Muscle muscle = muscleDao.getById(id);
-        return muscleMapper.muscleToGetOrUpdateMuscle(muscle);
+        return muscleMapper.muscleToMuscleGetDto(muscle);
     }
 
     @Override
-    public List<MuscleGetOrUpdateDto> getAll() {
+    public List<MuscleGetDto> getAll() {
         List<Muscle> muscles = muscleDao.getAll();
         return muscles
                 .stream()
-                .map(muscle -> muscleMapper.muscleToGetOrUpdateMuscle(muscle))
+                .map(muscle -> muscleMapper.muscleToMuscleGetDto(muscle))
                 .collect(Collectors.toList());
     }
 }
